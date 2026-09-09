@@ -437,25 +437,31 @@ li {
 
 .contact-links {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   border-top: 1px solid #151410;
 }
 
 .contact-links a,
+.contact-links span,
 .contact-page a {
   display: block;
   padding: 18px 0;
   border-bottom: 1px solid rgba(21, 20, 16, .55);
-  font-size: clamp(22px, 2.2vw, 38px);
+  font-size: clamp(18px, 1.45vw, 28px);
   letter-spacing: 0;
+  word-break: break-word;
 }
 
-.contact-links a + a {
+.contact-links a + a,
+.contact-links a + span,
+.contact-links span + a,
+.contact-links span + span {
   padding-left: 28px;
   border-left: 1px solid rgba(21, 20, 16, .55);
 }
 
 .contact-links small,
+.contact-links span small,
 .contact-page small {
   display: block;
   margin-bottom: 18px;
@@ -868,7 +874,10 @@ li {
     font-size: 18.5vw;
   }
 
-  .contact-links a + a {
+  .contact-links a + a,
+  .contact-links a + span,
+  .contact-links span + a,
+  .contact-links span + span {
     padding-left: 0;
     border-left: 0;
   }

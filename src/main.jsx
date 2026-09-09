@@ -282,7 +282,7 @@ function Nav({ tone = 'dark' }) {
     ['/', '首页'],
     ['/work', '作品案例'],
     ['/#about', 'About Me'],
-    ['/contact', '联系'],
+    ['/#contact', 'Contact'],
   ]
 
   return (
@@ -513,25 +513,6 @@ function CapabilitySection() {
   )
 }
 
-function Contact() {
-  return (
-    <>
-      <Nav />
-      <main className="page">
-        <section className="contact-page section">
-          <p className="eyebrow">Contact</p>
-          <h1>联系我，了解完整作品集与项目经历。</h1>
-          <div>
-            <a href="mailto:doney870506473@163.com"><small>邮箱</small>doney870506473@163.com</a>
-            <a href="tel:+8617612442018"><small>电话</small>+86 176 1244 2018</a>
-            <a href="https://www.doneydong.top"><small>网站</small>www.doneydong.top</a>
-          </div>
-        </section>
-      </main>
-    </>
-  )
-}
-
 function ContactBand() {
   return (
     <footer className="contact-band" id="contact">
@@ -543,6 +524,8 @@ function ContactBand() {
       <div className="contact-links">
         <a href="mailto:doney870506473@163.com"><small>邮箱</small>doney870506473@163.com</a>
         <a href="tel:+8617612442018"><small>电话</small>+86 176 1244 2018</a>
+        <a href="https://www.doneydong.top"><small>网站</small>www.doneydong.top</a>
+        <span><small>微信</small>870506473</span>
       </div>
     </footer>
   )
@@ -554,9 +537,10 @@ function App() {
   const selectedCase = useMemo(() => cases.find((item) => item.id === caseId), [caseId])
 
   useEffect(() => {
-    if (route === '/#about') {
+    if (route === '/#about' || route === '/#contact') {
+      const target = route === '/#about' ? '#about' : '#contact'
       window.setTimeout(() => {
-        document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' })
+        document.querySelector(target)?.scrollIntoView({ behavior: 'smooth' })
       }, 0)
       return
     }
@@ -566,7 +550,6 @@ function App() {
 
   if (selectedCase) return <CasePage item={selectedCase} />
   if (route === '/work') return <Work />
-  if (route === '/contact') return <Contact />
   return <Home />
 }
 
