@@ -842,7 +842,7 @@ li {
   .hero-copy {
     left: 20px;
     right: 20px;
-    bottom: 96px;
+    bottom: 132px;
     max-width: calc(100% - 40px);
   }
 
@@ -874,6 +874,8 @@ li {
     margin-top: 22px;
     font-size: 14px;
     line-height: 1.72;
+    pointer-events: auto;
+    touch-action: pan-y;
   }
 
   .hero-link {
