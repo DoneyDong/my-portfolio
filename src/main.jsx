@@ -402,8 +402,9 @@ function HeroScene() {
       renderer.setSize(width, height, false)
       camera.aspect = width / height
       camera.updateProjectionMatrix()
-      stage.scale.setScalar(width < 700 ? .72 : 1.12)
-      stage.position.x = width < 700 ? .38 : 2.15
+      stage.scale.setScalar(width < 700 ? .58 : 1.12)
+      stage.position.x = width < 700 ? 1.15 : 2.15
+      stage.position.y = width < 700 ? -.22 : -.02
     }
 
     let frameId = 0
@@ -451,7 +452,7 @@ function Home() {
         <Nav tone="light" />
         <div className="hero-copy">
           <p className="eyebrow accent">PORTFOLIO / IP DERIVATIVES PRODUCT PROJECT MANAGER</p>
-          <h1>FROM IDEA<br /><i>TO MARKET.</i></h1>
+          <h1><span>FROM</span> <span>IDEA</span><br /><i><span>TO</span> <span>MARKET.</span></i></h1>
           <p>面向潮玩及 IP 衍生品方向，展示我在产品企划、设计验证、供应链协同与实体产品交付中的系统经验。</p>
         </div>
         <a className="hero-link" href="#/case/small-products">VIEW FEATURED CASE</a>

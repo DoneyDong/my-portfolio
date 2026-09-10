@@ -2,14 +2,20 @@
 
 :root {
   color: #151410;
-  background: #e9e5dd;
+  background: #f9f7f1;
   font-family: Manrope, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
   font-synthesis: none;
 }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: #e9e5dd; color: #151410; }
+body { margin: 0; background: #f9f7f1; color: #151410; }
+html,
+body,
+#root {
+  max-width: 100%;
+  overflow-x: clip;
+}
 a { color: inherit; text-decoration: none; }
 button { border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
 img { max-width: 100%; }
@@ -145,6 +151,9 @@ li {
   left: max(48px, calc((100% - 1720px) / 2));
   bottom: 11.8%;
   max-width: 1180px;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
 }
 
 .hero-copy h1,
@@ -185,6 +194,8 @@ li {
   text-align: center;
   font: 500 11px/1.45 "DM Mono", monospace;
   letter-spacing: .08em;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .intro {
@@ -193,6 +204,8 @@ li {
   grid-template-columns: .7fr 1.5fr 1fr;
   gap: 54px;
   background: #f9f7f1;
+  box-shadow: 0 0 0 100vmax #f9f7f1;
+  clip-path: inset(0 -100vmax);
 }
 
 .intro h2,
@@ -220,6 +233,8 @@ li {
   border-top: 1px solid #151410;
   border-left: 1px solid #151410;
   background: #f9f7f1;
+  box-shadow: 0 0 0 100vmax #f9f7f1;
+  clip-path: inset(0 -100vmax);
 }
 
 .metrics div {
@@ -397,6 +412,8 @@ li {
 .about-inline {
   padding: 138px 0 118px;
   background: #f9f7f1;
+  box-shadow: 0 0 0 100vmax #f9f7f1;
+  clip-path: inset(0 -100vmax);
   display: grid;
   grid-template-columns: .7fr 1.55fr .75fr;
   gap: 54px;
@@ -739,12 +756,26 @@ li {
 }
 
 @media (max-width: 980px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
   .section,
   .site-nav {
     width: calc(100% - 40px);
   }
 
   .site-nav { height: 76px; }
+  .brand {
+    min-width: 0;
+    max-width: calc(100% - 56px);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
   .nav-links { display: none; }
 
   .menu-button {
@@ -787,27 +818,70 @@ li {
     font: 500 10px/1 "DM Mono", monospace;
   }
 
-  .hero { min-height: 650px; }
+  .hero {
+    width: 100%;
+    min-height: 680px;
+    height: 100svh;
+    max-height: 820px;
+    overflow: hidden;
+    background: #10100e;
+  }
+
+  .hero-scene {
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .hero-shade {
+    background:
+      radial-gradient(circle at 77% 28%, rgba(215, 255, 63, .22), transparent 30%),
+      linear-gradient(180deg, rgba(0, 0, 0, .26), rgba(0, 0, 0, .1) 34%, rgba(0, 0, 0, .78) 72%),
+      linear-gradient(90deg, rgba(0, 0, 0, .76), rgba(0, 0, 0, .24) 72%);
+  }
 
   .hero-copy {
     left: 20px;
     right: 20px;
-    bottom: 17%;
+    bottom: 96px;
+    max-width: calc(100% - 40px);
+  }
+
+  .hero-copy .eyebrow {
+    max-width: 280px;
+    font-size: 9px;
+    line-height: 1.45;
+    white-space: normal;
   }
 
   .hero-copy h1 {
-    font-size: 19vw;
+    font-size: clamp(48px, 14.2vw, 64px);
+    line-height: .86;
     letter-spacing: 0;
   }
 
-  .hero-copy p:last-child { font-size: 14px; }
+  .hero-copy h1 span {
+    display: block;
+  }
+
+  .hero-copy h1 i {
+    display: block;
+    font-size: 1em;
+    line-height: .86;
+  }
+
+  .hero-copy p:last-child {
+    max-width: 330px;
+    margin-top: 22px;
+    font-size: 14px;
+    line-height: 1.72;
+  }
 
   .hero-link {
     right: 20px;
-    bottom: 22px;
-    width: 118px;
-    height: 118px;
-    font-size: 9px;
+    bottom: 24px;
+    width: 86px;
+    height: 86px;
+    font-size: 8px;
   }
 
   .intro,
@@ -829,6 +903,12 @@ li {
     padding: 78px 0 64px;
   }
 
+  .intro {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
   .intro > p,
   .page-hero > p:last-child { margin-top: 32px; }
 
@@ -841,13 +921,18 @@ li {
   }
 
   .metrics div { min-height: 142px; }
+  .metrics span {
+    white-space: normal;
+    font-size: 16px;
+  }
 
   .work-band { padding: 20px 0 80px; }
   .work-head { padding: 70px 0 46px; }
 
   .work-head h2 {
     margin-top: 34px;
-    font-size: 18vw;
+    font-size: clamp(58px, 17vw, 86px);
+    line-height: .9;
   }
 
   .text-link {
@@ -862,7 +947,7 @@ li {
 
   .case-card h3 {
     bottom: 104px;
-    font-size: 15vw;
+    font-size: clamp(46px, 14vw, 72px);
   }
 
   .case-meta { grid-template-columns: .4fr 1fr; }
@@ -880,7 +965,17 @@ li {
 
   .contact-band h2 {
     margin: 74px 0;
-    font-size: 18.5vw;
+    font-size: clamp(58px, 17vw, 86px);
+    line-height: .9;
+  }
+
+  .footer-top {
+    gap: 18px;
+  }
+
+  .footer-top span,
+  .footer-top a {
+    min-width: 0;
   }
 
   .contact-links a + a,
@@ -914,7 +1009,10 @@ li {
 
   .case-hero { min-height: 680px; }
   .case-title { padding-top: 180px; }
-  .case-title h1 { font-size: 15vw; }
+  .case-title h1 {
+    font-size: clamp(48px, 14vw, 76px);
+    max-width: 100%;
+  }
   .case-facts { width: 100%; }
   .case-facts div { min-height: 120px; }
   .case-facts p { margin-top: 28px; }
@@ -934,6 +1032,10 @@ li {
   .case-writing p {
     grid-column: auto;
     font-size: 14px;
+  }
+
+  .case-writing h2 {
+    font-size: clamp(32px, 10vw, 46px);
   }
 
   .gallery-group,
