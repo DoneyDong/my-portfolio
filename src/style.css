@@ -106,12 +106,19 @@ li {
   color: #fff;
 }
 
+.hero-scene,
 .hero-image,
 .hero-shade,
 .case-hero img,
 .case-hero-shade {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-scene canvas {
+  display: block;
   width: 100%;
   height: 100%;
 }
@@ -126,8 +133,10 @@ li {
 
 .hero-shade {
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, .72), rgba(0, 0, 0, .18) 66%),
-    linear-gradient(0deg, rgba(0, 0, 0, .52), transparent 42%);
+    radial-gradient(circle at 70% 48%, rgba(215, 255, 63, .2), transparent 31%),
+    linear-gradient(90deg, rgba(0, 0, 0, .88) 0%, rgba(0, 0, 0, .56) 38%, rgba(0, 0, 0, .08) 72%),
+    linear-gradient(0deg, rgba(0, 0, 0, .54), transparent 44%);
+  pointer-events: none;
 }
 
 .hero-copy {

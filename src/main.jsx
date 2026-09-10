@@ -1,5 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import './style.css'
 
 const cases = [
@@ -302,13 +305,148 @@ function Nav({ tone = 'dark' }) {
   )
 }
 
-function Home() {
-  const heroCase = cases[0]
+function HeroScene() {
+  const mountRef = useRef(null)
 
+  useEffect(() => {
+    const mount = mountRef.current
+    if (!mount) return undefined
+
+    const scene = new THREE.Scene()
+    scene.background = new THREE.Color('#10100e')
+
+    const camera = new THREE.PerspectiveCamera(30, 1, .1, 100)
+    camera.position.set(0, .45, 7.2)
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' })
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8))
+    renderer.outputColorSpace = THREE.SRGBColorSpace
+    renderer.toneMapping = THREE.ACESFilmicToneMapping
+    renderer.toneMappingExposure = 1.24
+    renderer.shadowMap.enabled = true
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap
+    renderer.domElement.style.touchAction = 'none'
+    mount.appendChild(renderer.domElement)
+
+    const stage = new THREE.Group()
+    stage.position.set(2.15, -.02, 0)
+    scene.add(stage)
+
+    const controls = new OrbitControls(camera, renderer.domElement)
+    controls.enableDamping = true
+    controls.dampingFactor = .08
+    controls.enableZoom = false
+    controls.enablePan = false
+    controls.autoRotate = true
+    controls.autoRotateSpeed = 1.7
+    controls.rotateSpeed = 1.15
+    controls.minPolarAngle = Math.PI * .28
+    controls.maxPolarAngle = Math.PI * .68
+
+    const modelRoot = new THREE.Group()
+    modelRoot.rotation.y = -.34
+    stage.add(modelRoot)
+
+    const loader = new GLTFLoader()
+    loader.load('/models/mini.glb', (gltf) => {
+      const model = gltf.scene
+      const box = new THREE.Box3().setFromObject(model)
+      const size = new THREE.Vector3()
+      const center = new THREE.Vector3()
+      box.getSize(size)
+      box.getCenter(center)
+
+      const maxAxis = Math.max(size.x, size.y, size.z) || 1
+      const modelScale = 3.05 / maxAxis
+      model.scale.setScalar(modelScale)
+      model.position.set(
+        -center.x * modelScale,
+        -center.y * modelScale - .06,
+        -center.z * modelScale,
+      )
+
+      model.traverse((object) => {
+        if (!object.isMesh) return
+        object.castShadow = true
+        object.receiveShadow = true
+        if (object.material) {
+          object.material.needsUpdate = true
+        }
+      })
+
+      modelRoot.add(model)
+    })
+
+    scene.add(new THREE.HemisphereLight('#fff7e9', '#10100e', 3))
+    const key = new THREE.DirectionalLight('#ffffff', 5.6)
+    key.position.set(2.5, 5.8, 4.8)
+    key.castShadow = true
+    key.shadow.mapSize.set(2048, 2048)
+    scene.add(key)
+    const rim = new THREE.PointLight('#d7ff3f', 3.2, 8)
+    rim.position.set(-3.4, .9, 2.8)
+    scene.add(rim)
+    const fill = new THREE.PointLight('#fff3d8', 2.8, 7)
+    fill.position.set(1.7, .55, 3.4)
+    scene.add(fill)
+
+    const pointer = new THREE.Vector2()
+    const onPointerMove = (event) => {
+      const rect = mount.getBoundingClientRect()
+      pointer.x = ((event.clientX - rect.left) / rect.width - .5) * 2
+      pointer.y = ((event.clientY - rect.top) / rect.height - .5) * 2
+    }
+
+    const resize = () => {
+      const { width, height } = mount.getBoundingClientRect()
+      renderer.setSize(width, height, false)
+      camera.aspect = width / height
+      camera.updateProjectionMatrix()
+      stage.scale.setScalar(width < 700 ? .72 : 1.12)
+      stage.position.x = width < 700 ? .38 : 2.15
+    }
+
+    let frameId = 0
+    const clock = new THREE.Clock()
+    const animate = () => {
+      const elapsed = clock.getElapsedTime()
+      stage.rotation.y = pointer.x * .24
+      stage.rotation.x = pointer.y * .11
+      modelRoot.position.y = Math.sin(elapsed * 1.1) * .045
+      controls.update()
+      renderer.render(scene, camera)
+      frameId = window.requestAnimationFrame(animate)
+    }
+
+    resize()
+    animate()
+    mount.addEventListener('pointermove', onPointerMove)
+    window.addEventListener('resize', resize)
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+      mount.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener('resize', resize)
+      controls.dispose()
+      renderer.dispose()
+      scene.traverse((object) => {
+        if (!object.isMesh) return
+        object.geometry?.dispose()
+        if (Array.isArray(object.material)) object.material.forEach((material) => material.dispose())
+        else object.material?.dispose()
+      })
+      mount.removeChild(renderer.domElement)
+    }
+  }, [])
+
+  return <div className="hero-scene" ref={mountRef} aria-hidden="true" />
+}
+
+function Home() {
   return (
     <>
       <section className="hero">
-        <img className="hero-image" src={heroCase.image} alt="主题乐园小型周边产品系列" />
+        <HeroScene />
         <div className="hero-shade" />
         <Nav tone="light" />
         <div className="hero-copy">
